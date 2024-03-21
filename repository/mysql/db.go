@@ -15,6 +15,10 @@ type dbconfig struct {
 	port     string
 }
 
+type MYSQLDB struct {
+	database *gorm.DB
+}
+
 func CreateDBIfNotExist() error {
 	//TODO - read from .env file.
 	config := dbconfig{
@@ -41,7 +45,7 @@ func CreateDBIfNotExist() error {
 	return nil
 }
 
-func New() *gorm.DB {
+func New() *MYSQLDB {
 	//TODO - read from .env file.
 	config := dbconfig{
 		user:     "root",
@@ -57,7 +61,7 @@ func New() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	return db
+	return &MYSQLDB{database: db}
 }
 
 /*
@@ -65,8 +69,8 @@ func TestDB() *gorm.DB {
 
 }*/
 
-func AutoMigrate(db *gorm.DB) {
-	err := db.AutoMigrate(
+func AutoMigrate(mysqlDB *MYSQLDB) {
+	err := mysqlDB.database.AutoMigrate(
 		&model.User{},
 		&model.Password{},
 	)

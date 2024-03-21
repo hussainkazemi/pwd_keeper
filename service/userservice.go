@@ -4,24 +4,23 @@ import (
 	"pwsd_keeper/model"
 )
 
-type UserCreateRequest struct {
-	User model.User
+type Store interface {
+	CreateUser(user model.User) error
+	GetUserInfo(userName string) (model.User, error)
 }
 
-type UserLoginRequest struct {
-	UserName string
-	password string
+type LoginRequest struct {
+	User  model.User
+	Store Store
 }
 
-type UserResponse struct {
-	User model.User
+func (request LoginRequest) CreateUser() error {
+	err := request.Store.CreateUser(request.User)
+
+	return err
 }
 
 /*
-func CreateUser(info UserCreateRequest) (UserResponse, error) {
-
-}
-
 func UserLogin(info UserLoginRequest) (UserResponse, error) {
 
 }
