@@ -4,7 +4,7 @@ import (
 	"pwsd_keeper/model"
 )
 
-func (mysql *MYSQLDB) CreateUser(user model.User) error {
+func (mysql *MYSQLDB) CreateUser(user *model.User) error {
 	mysql.database.Create(user)
 
 	return nil

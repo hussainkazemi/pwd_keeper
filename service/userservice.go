@@ -4,18 +4,17 @@ import (
 	"pwsd_keeper/model"
 )
 
-type Store interface {
-	CreateUser(user model.User) error
+type UserRepository interface {
+	CreateUser(user *model.User) error
 	GetUserInfo(userName string) (model.User, error)
 }
 
-type LoginRequest struct {
-	User  model.User
-	Store Store
+type Service struct {
+	Repo UserRepository
 }
 
-func (request LoginRequest) CreateUser() error {
-	err := request.Store.CreateUser(request.User)
+func (s Service) CreateUser(user *model.User) error {
+	err := s.Repo.CreateUser(user)
 
 	return err
 }
