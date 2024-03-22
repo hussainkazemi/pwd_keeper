@@ -98,7 +98,7 @@ func loginUser(scanner *bufio.Scanner, userService service.Service) {
 		password := scanner.Text()
 
 		uLoginRes := userService.LoginUser(userName)
-		if !uLoginRes.IsUserFind || uLoginRes.User.Password != password {
+		if !uLoginRes.IsUserFind || uLoginRes.User.Password != service.GetMD5Hash(password) {
 			cnt += 1
 			if cnt == 3 {
 				fmt.Println("you try too many ")
@@ -117,10 +117,13 @@ func loginUser(scanner *bufio.Scanner, userService service.Service) {
 func passwordMenu(scanner *bufio.Scanner) {
 	utility.ClearScreen()
 	fmt.Println(`please select once: 
-		1) show password list
-		2) add new password
-		3) generate random password
-		press any key for exit`)
+1) show label list
+2) search label
+3) update password
+4) remove password
+5) add new password
+6) generate random password
+press any key for exit`)
 	scanner.Scan()
 	//command:= scanner.Text()
 

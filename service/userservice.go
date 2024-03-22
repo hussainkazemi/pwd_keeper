@@ -1,6 +1,8 @@
 package service
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"pwsd_keeper/model"
 )
 
@@ -23,6 +25,7 @@ type CurrentUser struct {
 }
 
 func (s Service) CreateUser(user *model.User) error {
+	user.Password = GetMD5Hash(user.Password)
 	if err := s.Repo.CreateUser(user); err != nil {
 		return err
 	}
@@ -40,4 +43,9 @@ func (s Service) LoginUser(userName string) UserLoginResponse {
 func GetCurrentUser() CurrentUser {
 
 	return CurrentUser{}
+}
+
+func GetMD5Hash(text string) string {
+	hash := md5.Sum([]byte(text))
+	return hex.EncodeToString(hash[:])
 }
