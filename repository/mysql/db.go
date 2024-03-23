@@ -37,7 +37,7 @@ func CreateDBIfNotExist() error {
 
 	_ = db.Exec("CREATE DATABASE IF NOT EXISTS " + config.db_name + ";")
 
-	//TODO - handle error
+	//TODO - handle error every panic
 	if err != nil {
 		return err
 	}

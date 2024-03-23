@@ -144,8 +144,20 @@ func passwordMenu(scanner *bufio.Scanner) {
 6) generate random password
 press any key for exit`)
 	scanner.Scan()
-	//command:= scanner.Text()
-
+	command := scanner.Text()
+	switch command {
+	case "1":
+	case "2":
+	case "3":
+	case "4":
+	case "5":
+	case "6":
+		
+	default:
+		fmt.Println("please insert correct number ")
+		time.Sleep(time.Second * 2)
+		passwordMenu(scanner)
+	}
 }
 
 func exit() {

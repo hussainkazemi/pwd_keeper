@@ -11,10 +11,11 @@ import (
 	"io"
 	random "math/rand/v2"
 	"pwsd_keeper/model"
+	"pwsd_keeper/pkg/utility"
 )
 
 const (
-	key = "a very very very very secret key"
+	SECRET_KEY = "ENCRYPT_KEY"
 )
 
 func GetMD5Hash(text string) string {
@@ -23,6 +24,10 @@ func GetMD5Hash(text string) string {
 }
 
 func Encrypt(text []byte) ([]byte, error) {
+	key, err := utility.LoadFromEnv(SECRET_KEY)
+	if err != nil {
+		return nil, err
+	}
 	block, err := aes.NewCipher([]byte(key))
 	if err != nil {
 		return nil, err
@@ -39,6 +44,10 @@ func Encrypt(text []byte) ([]byte, error) {
 }
 
 func Decrypt(text []byte) ([]byte, error) {
+	key, err := utility.LoadFromEnv(SECRET_KEY)
+	if err != nil {
+		return nil, err
+	}
 	block, err := aes.NewCipher([]byte(key))
 	if err != nil {
 		return nil, err
