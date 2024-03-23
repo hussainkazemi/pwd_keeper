@@ -14,3 +14,11 @@ type Password struct {
 	CreatedAt time.Time `gorm:"autoCreateTime/mil"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime/mil"`
 }
+
+type RandomPassword struct {
+	N_letter uint8
+	N_capita uint8
+	N_number uint8
+	N_signs  uint8
+	Length   uint8
+}

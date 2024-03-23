@@ -6,6 +6,7 @@ import (
 	"golang.org/x/term"
 	"os"
 	"pwsd_keeper/model"
+	Ppassowrd "pwsd_keeper/pkg/password"
 	"pwsd_keeper/pkg/utility"
 	"pwsd_keeper/repository/mysql"
 	"pwsd_keeper/service"
@@ -116,7 +117,7 @@ func loginUser(scanner *bufio.Scanner, userService service.Service) {
 		password := string(bytePassword)
 
 		uLoginRes := userService.LoginUser(userName)
-		if !uLoginRes.IsUserFind || uLoginRes.User.Password != service.GetMD5Hash(password) {
+		if !uLoginRes.IsUserFind || uLoginRes.User.Password != Ppassowrd.GetMD5Hash(password) {
 			cnt += 1
 			if cnt == 3 {
 				fmt.Println("you try too many ")

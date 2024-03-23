@@ -9,9 +9,13 @@ import (
 	"encoding/hex"
 	"errors"
 	"io"
+	random "math/rand/v2"
+	"pwsd_keeper/model"
 )
 
-const key = "a very very very very secret key"
+const (
+	key = "a very very very very secret key"
+)
 
 func GetMD5Hash(text string) string {
 	hash := md5.Sum([]byte(text))
@@ -51,4 +55,33 @@ func Decrypt(text []byte) ([]byte, error) {
 		return nil, err
 	}
 	return data, nil
+}
+
+func GenerateRandomPassword(rPasswordModel model.RandomPassword) string {
+	var letter = []rune("abcdefghijklmnopqrstuvwxyz")
+	var capital = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	var numbers = []rune("0123456789")
+	var signs = []rune("!@#$%^&*()_+")
+	b := make([]rune, rPasswordModel.Length)
+	j := 0
+	for i := uint8(0); i < rPasswordModel.N_letter; i++ {
+		b[j] = letter[random.IntN(len(letter))]
+		j++
+	}
+	for i := uint8(0); i < rPasswordModel.N_capita; i++ {
+		b[j] = capital[random.IntN(len(capital))]
+		j++
+	}
+	for i := uint8(0); i < rPasswordModel.N_number; i++ {
+		b[j] = numbers[random.IntN(len(numbers))]
+		j++
+	}
+	for i := uint8(0); i < rPasswordModel.N_signs; i++ {
+		b[j] = signs[random.IntN(len(signs))]
+		j++
+	}
+
+	random.Shuffle(int(rPasswordModel.Length), func(i, j int) { b[i], b[j] = b[j], b[i] })
+
+	return string(b)
 }

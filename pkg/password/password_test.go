@@ -1,6 +1,10 @@
 package password
 
-import "testing"
+import (
+	"fmt"
+	"pwsd_keeper/model"
+	"testing"
+)
 
 func TestEncrypt(t *testing.T) {
 	tCases := []string{
@@ -22,5 +26,18 @@ func TestEncrypt(t *testing.T) {
 		if string(decrypt) != v {
 			t.Errorf("for %s wanted %s but get %s", v, v, string(decrypt))
 		}
+	}
+}
+
+func BenchmarkGenerateRandomPassword(b *testing.B) {
+	rPasswordModel := model.RandomPassword{
+		N_capita: 4,
+		N_letter: 4,
+		N_signs:  4,
+		N_number: 4,
+		Length:   16,
+	}
+	for i := 0; i < b.N; i++ {
+		fmt.Println(GenerateRandomPassword(rPasswordModel))
 	}
 }
