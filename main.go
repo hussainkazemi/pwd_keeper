@@ -3,12 +3,14 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"golang.org/x/term"
 	"os"
 	"pwsd_keeper/model"
 	"pwsd_keeper/pkg/utility"
 	"pwsd_keeper/repository/mysql"
 	"pwsd_keeper/service"
 	"strconv"
+	"syscall"
 	"time"
 )
 
@@ -64,9 +66,22 @@ func registerUser(scanner *bufio.Scanner, userService service.Service) {
 	fmt.Println("please insert your phoneNumber: ")
 	scanner.Scan()
 	phoneNumber := scanner.Text()
-	fmt.Println("please insert your password: ")
-	scanner.Scan()
-	password := scanner.Text()
+	var password string
+	for {
+		fmt.Println("please insert your password: (not echo)")
+		bytePassword1, _ := term.ReadPassword(int(syscall.Stdin))
+		fmt.Println("please re-type your password: (not echo)")
+		bytePassword2, _ := term.ReadPassword(int(syscall.Stdin))
+		if string(bytePassword1) == string(bytePassword2) {
+			fmt.Println("password register successfully")
+			password = string(bytePassword1)
+			break
+		} else {
+			fmt.Println("passwords are not match please try again")
+			time.Sleep(time.Second * 2)
+			utility.ClearScreen()
+		}
+	}
 	fmt.Println("please insert your userName: ")
 	scanner.Scan()
 	userName := scanner.Text()
@@ -93,9 +108,12 @@ func loginUser(scanner *bufio.Scanner, userService service.Service) {
 		fmt.Println("please insert your user_name ")
 		scanner.Scan()
 		userName := scanner.Text()
-		fmt.Println("please insert your password ")
-		scanner.Scan()
-		password := scanner.Text()
+		fmt.Println("please insert your password (not echo)")
+		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+		if err != nil {
+			panic("can not read password")
+		}
+		password := string(bytePassword)
 
 		uLoginRes := userService.LoginUser(userName)
 		if !uLoginRes.IsUserFind || uLoginRes.User.Password != service.GetMD5Hash(password) {
