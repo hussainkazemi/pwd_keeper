@@ -1,6 +1,7 @@
 package utility
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"os"
 	"os/exec"
@@ -14,7 +15,7 @@ const (
 	MAC     = "darwin"
 	LINUX   = "linux"
 	//read env file path form config file
-	EnvPath = "./../../.env"
+	EnvPath = ".env"
 )
 
 func ClearScreen() {
@@ -35,6 +36,7 @@ func ClearScreen() {
 func LoadFromEnv(key string) (string, error) {
 	err := godotenv.Load(EnvPath)
 	if err != nil {
+		fmt.Println(err)
 		return "", err
 	}
 	return os.Getenv(key), nil
