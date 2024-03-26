@@ -5,6 +5,7 @@ import (
 	"github.com/joho/godotenv"
 	"os"
 	"os/exec"
+	"pwsd_keeper/config"
 	"runtime"
 )
 
@@ -14,8 +15,6 @@ const (
 	WINDOWS = "windows"
 	MAC     = "darwin"
 	LINUX   = "linux"
-	//read env file path form config file
-	EnvPath = ".env"
 )
 
 func ClearScreen() {
@@ -34,7 +33,7 @@ func ClearScreen() {
 }
 
 func LoadFromEnv(key string) (string, error) {
-	err := godotenv.Load(EnvPath)
+	err := godotenv.Load(config.GetEnvFilePath())
 	if err != nil {
 		fmt.Println(err)
 		return "", err
