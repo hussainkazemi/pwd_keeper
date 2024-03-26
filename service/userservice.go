@@ -3,6 +3,12 @@ package service
 import (
 	"pwsd_keeper/model"
 	"pwsd_keeper/pkg/password"
+	"pwsd_keeper/repository/redis"
+	"strconv"
+)
+
+const (
+	KEY = "UserId"
 )
 
 type UserRepository interface {
@@ -17,10 +23,6 @@ type UserLoginResponse struct {
 
 type Service struct {
 	Repo UserRepository
-}
-
-type CurrentUser struct {
-	user model.User
 }
 
 func (s Service) CreateUser(user *model.User) error {
@@ -38,8 +40,25 @@ func (s Service) LoginUser(userName string) UserLoginResponse {
 	return uLoginReq
 }
 
-// TODO - get current user- if user not login return nil
-func GetCurrentUser() CurrentUser {
+func GetCurrentUserId() uint8 {
+	ctx, rdb := redis.New()
 
-	return CurrentUser{}
+	userIdStr, err := rdb.Get(ctx, KEY).Result()
+	if err != nil {
+		panic("can not read current user id")
+	}
+	userId, err := strconv.Atoi(userIdStr)
+	if err != nil {
+		panic("current user id is not digits")
+	}
+	return uint8(userId)
+}
+
+func SetCurrentUserId(userId uint8) {
+	ctx, rdb := redis.New()
+
+	err := rdb.Set(ctx, KEY, "", 0).Err()
+	if err != nil {
+		panic("can not set current user id ")
+	}
 }
