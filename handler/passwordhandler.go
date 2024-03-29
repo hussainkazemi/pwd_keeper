@@ -31,6 +31,7 @@ insert exit for exit`)
 	case "3":
 	case "4":
 	case "5":
+		AddNewPassword()
 	case "6":
 		GenerateRandomPassword()
 	case "exit":
@@ -42,6 +43,35 @@ insert exit for exit`)
 	}
 }
 
+func AddNewPassword() {
+	utility.ClearScreen()
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Println("insert label ")
+	scanner.Scan()
+	label := scanner.Text()
+	fmt.Println("insert password ")
+	scanner.Scan()
+	pwd := scanner.Text()
+	pModel := model.Password{
+		Label:    label,
+		Password: pwd,
+		UserId:   service.GetCurrentUserId(),
+	}
+	db := InitDB()
+	passwordService := service.PasswordService{
+		Repo: db,
+	}
+	err := passwordService.CreatePassword(&pModel)
+	if err != nil {
+		fmt.Printf("can not add new password in database %s", err.Error())
+		time.Sleep(time.Second * 2)
+		Exit()
+	}
+	fmt.Println("your password add successfully")
+	time.Sleep(time.Second * 2)
+	PasswordMenu()
+}
+
 // GenerateRandomPassword create a random strong password for your label.
 func GenerateRandomPassword() {
 	utility.ClearScreen()
@@ -49,7 +79,7 @@ func GenerateRandomPassword() {
 	fmt.Println("how many letter (a,b,c,...)? ")
 	scanner.Scan()
 	letter, _ := strconv.Atoi(scanner.Text())
-	fmt.Println("how many number (A,B,C,...)? ")
+	fmt.Println("how many capital letter (A,B,C,...)? ")
 	scanner.Scan()
 	number, _ := strconv.Atoi(scanner.Text())
 	fmt.Println("how many number (1,2,3,...)? ")
