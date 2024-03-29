@@ -30,7 +30,7 @@ func New() (context.Context, *redis.Client) {
 	handleErr(err)
 
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%d", redisAddress, redisPort),
+		Addr:     fmt.Sprintf("%s:%s", redisAddress, redisPort),
 		Password: redisPassword,
 		DB:       0,
 	})

@@ -93,7 +93,7 @@ func GenerateRandomPassword() {
 		pModel := model.Password{
 			Label:    label,
 			Password: pwd,
-			UserId:   8,
+			UserId:   service.GetCurrentUserId(),
 		}
 		err := passwordService.CreatePassword(&pModel)
 		if err != nil {

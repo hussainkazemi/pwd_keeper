@@ -87,6 +87,7 @@ func LoginUser(db *mysql.MYSQLDB) {
 			fmt.Println("user name not found or password incorrect.\ntry again")
 			time.Sleep(time.Second * 2)
 		} else {
+			service.SetCurrentUserId(uLoginRes.User.Id)
 			isUserLogin = true
 		}
 	}

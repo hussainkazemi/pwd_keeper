@@ -40,7 +40,7 @@ func (s Service) LoginUser(userName string) UserLoginResponse {
 	return uLoginReq
 }
 
-func GetCurrentUserId() uint8 {
+func GetCurrentUserId() uint32 {
 	ctx, rdb := redis.New()
 
 	userIdStr, err := rdb.Get(ctx, KEY).Result()
@@ -51,13 +51,13 @@ func GetCurrentUserId() uint8 {
 	if err != nil {
 		panic("current user id is not digits")
 	}
-	return uint8(userId)
+	return uint32(userId)
 }
 
-func SetCurrentUserId(userId uint8) {
+func SetCurrentUserId(userId uint32) {
 	ctx, rdb := redis.New()
 
-	err := rdb.Set(ctx, KEY, "", 0).Err()
+	err := rdb.Set(ctx, KEY, userId, 0).Err()
 	if err != nil {
 		panic("can not set current user id ")
 	}
